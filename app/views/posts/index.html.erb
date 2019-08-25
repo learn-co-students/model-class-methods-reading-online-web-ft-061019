@@ -1,8 +1,9 @@
-<h1>Believe It Or Not I'm Blogging On Air</h1>
-<% @posts.each do |post| %>
-  <div>
-    <h2><%= post.title %></h2>
-    <h3>by: <%= link_to post.author.name, author_path(post.author) %></h3>
-    <p><%= post.description %></p>
-  </div>
+<% if !params[:author].blank? %>
+  <% @posts = Post.where(author: params[:author]) %>
+<% elsif !params[:date].blank? %>
+  <% if params[:date] == "Today" %>
+    <% @posts = Post.where("created_at >=?", Time.zone.today.beginning_of_day) %>
+  <% else %>
+    <% @posts = Post.where("created_at <?", Time.zone.today.beginning_of_day) %>
+  <% end %>
 <% end %>
